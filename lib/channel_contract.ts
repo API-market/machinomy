@@ -32,11 +32,11 @@ export default class ChannelContract {
     })
   }
 
-  async claim (receiver: string, channelId: string, value: BigNumber.BigNumber, signature: Signature): Promise<TransactionResult> {
+  async claim (receiver: string, channelId: string, value: BigNumber.BigNumber, signature: Signature, provider: string): Promise<TransactionResult> {
     LOG(`Claiming channel with id ${channelId} on behalf of receiver ${receiver}`)
     LOG(`Values: ${value} / Signature: ${signature.toString()}`)
     const deployed = await this.contract()
-    return deployed.claim(channelId, value, signature.toString(), { from: receiver })
+    return deployed.claim(channelId, value, signature.toString(), provider, { from: receiver })
   }
 
   async deposit (sender: string, channelId: string, value: BigNumber.BigNumber): Promise<TransactionResult> {
@@ -53,8 +53,7 @@ export default class ChannelContract {
     LOG(`Fetching state for channel ${channelId}`)
     const deployed = await this.contract()
     const isOpen = await deployed.isOpen(channelId)
-    const isSettling = await deployed.isSettling(channelId)
-
+    const isSettling = false
     if (isOpen) {
       return 0
     }
@@ -93,6 +92,7 @@ export default class ChannelContract {
       this._contract = process.env.CONTRACT_ADDRESS ?
         await Unidirectional.contract(this.web3.currentProvider).at(process.env.CONTRACT_ADDRESS as string) :
         await Unidirectional.contract(this.web3.currentProvider).deployed()
+        LOG(`${this._contract.address}`)
     }
 
     return this._contract

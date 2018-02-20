@@ -15,7 +15,8 @@ import { PaymentRequired } from './lib/transport'
 import PaymentsDatabase from './lib/storages/payments_database'
 import defaultRegistry from './lib/services'
 import ChannelContract from './lib/channel_contract'
-
+import * as env from './lib/env'
+import { Unidirectional } from '@machinomy/contracts'
 /**
  * Options for machinomy buy.
  */
@@ -39,6 +40,10 @@ export interface BuyOptions {
 export interface BuyResult {
   channelId: string
   token: string
+  contract: string
+  receiver: string
+  sender: string
+  value: string
 }
 
 /**
@@ -174,11 +179,14 @@ export default class Machinomy {
    */
   async buy (options: BuyOptions): Promise<BuyResult> {
     const price = new BigNumber.BigNumber(options.price)
-
+    const container = env.container()
     const channel = await this.channelManager.requireOpenChannel(this.account, options.receiver, price)
     const payment: Payment = await this.channelManager.nextPayment(channel.channelId, price, options.meta)
     const res: AcceptPaymentResponse = await this.client.doPayment(payment, options.gateway)
-    return { token: res.token, channelId: channel.channelId }
+    const contract = process.env.CONTRACT_ADDRESS ?
+        await Unidirectional.contract(this.web3.currentProvider).at(process.env.CONTRACT_ADDRESS as string) :
+        await Unidirectional.contract(this.web3.currentProvider).deployed()
+    return { token: res.token, channelId: channel.channelId, receiver: channel.receiver, sender: channel.sender, value: channel.value.toString(), contract: contract.address}
   }
 
   async pry (uri: string): Promise<PaymentRequired> {
@@ -238,8 +246,9 @@ export default class Machinomy {
    * The method nicely abstracts over that, so you do not need to know what is really going on under the hood.
    * For more details on how payment channels work refer to a website.
    */
-  async close (channelId: string): Promise<TransactionResult> {
-    return this.channelManager.closeChannel(channelId)
+  //provider is the address of the API provider and not the verifier
+  async close (channelId: string, provider: string): Promise<TransactionResult> {
+    return this.channelManager.closeChannel(channelId, provider)
   }
 
   /**

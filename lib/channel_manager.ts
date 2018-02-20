@@ -23,7 +23,7 @@ export const DEFAULT_SETTLEMENT_PERIOD = 2 * DAY_IN_SECONDS
 export interface ChannelManager extends EventEmitter {
   openChannel (sender: string, receiver: string, amount: BigNumber.BigNumber, minDepositAmount?: BigNumber.BigNumber): Promise<PaymentChannel>
 
-  closeChannel (channelId: string | ChannelId): Promise<TransactionResult>
+  closeChannel (channelId: string | ChannelId, provider: string): Promise<TransactionResult>
 
   nextPayment (channelId: string | ChannelId, amount: BigNumber.BigNumber, meta: string): Promise<Payment>
 
@@ -74,8 +74,8 @@ export class ChannelManagerImpl extends EventEmitter implements ChannelManager {
     return this.mutex.synchronize(() => this.internalOpenChannel(sender, receiver, amount, minDepositAmount))
   }
 
-  closeChannel (channelId: string | ChannelId): Promise<TransactionResult> {
-    return this.mutex.synchronize(() => this.internalCloseChannel(channelId))
+  closeChannel (channelId: string | ChannelId, provider: string): Promise<TransactionResult> {
+    return this.mutex.synchronize(() => this.internalCloseChannel(channelId, provider))
   }
 
   nextPayment (channelId: string | ChannelId, amount: BigNumber.BigNumber, meta: string): Promise<Payment> {
@@ -170,7 +170,7 @@ export class ChannelManagerImpl extends EventEmitter implements ChannelManager {
       })
   }
 
-  private internalCloseChannel (channelId: ChannelId | string) {
+  private internalCloseChannel (channelId: ChannelId | string, provider: string) {
     return this.channelById(channelId).then((channel: PaymentChannel | null) => {
       if (!channel) {
         throw new Error(`Channel with id ${channelId.toString()} not found.`)
@@ -183,7 +183,7 @@ export class ChannelManagerImpl extends EventEmitter implements ChannelManager {
       if (channel.sender === this.account) {
         res = this.settle(channel)
       } else {
-        res = this.claim(channel)
+        res = this.claim(channel, provider)
       }
 
       return res.then((txn: TransactionResult) => {
@@ -212,13 +212,13 @@ export class ChannelManagerImpl extends EventEmitter implements ChannelManager {
     })
   }
 
-  private claim (channel: PaymentChannel): Promise<TransactionResult> {
+  private claim (channel: PaymentChannel, provider: string): Promise<TransactionResult> {
     return this.paymentsDao.firstMaximum(channel.channelId).then((payment: Payment) => {
       if (!payment) {
         throw new Error(`No payment found for channel ID ${channel.channelId.toString()}`)
       }
 
-      return this.channelContract.claim(channel.receiver, channel.channelId, payment.value, payment.signature)
+      return this.channelContract.claim(channel.receiver, channel.channelId, payment.value, payment.signature, provider)
         .then((res: TransactionResult) => this.channelsDao.updateState(channel.channelId, 2).then(() => res))
     })
   }
