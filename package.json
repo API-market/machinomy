@@ -22,7 +22,6 @@
     "test": "yarn build && yarn run test_nedb && yarn run test_mongo && yarn run test_postgres",
     "build": "tsc -p tsconfig.json",
     "lint": "tslint -t stylish -p '.' -e './node_modules/**/*.ts'",
-    "prepublish": "yarn lint && yarn build",
     "doc": "typedoc --ignoreCompilerErrors --out ./documentation --readme README.md --theme ../typedoc-theme index.ts "
   },
   "main": "index.js",
@@ -45,7 +44,7 @@
     "index.js.map"
   ],
   "dependencies": {
-    "@machinomy/contracts": "^4.0.2",
+    "@machinomy/contracts": "github:API-market/machinomy-contracts",
     "@types/bignumber.js": "^4.0.2",
     "@types/uuid": "^3.4.3",
     "bignumber.js": "^4.1.0",
