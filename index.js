@@ -230,6 +230,13 @@ var Machinomy = /** @class */ (function () {
             });
         });
     };
+    Machinomy.prototype.getState = function (channelId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.channelContract.getState(channelId)];
+            });
+        });
+    };
     /**
      * Save payment into the storage and return an id of the payment. The id can be used by {@link Machinomy.paymentById}.
      */

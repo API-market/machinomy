@@ -251,6 +251,9 @@ export default class Machinomy {
     return this.channelManager.closeChannel(channelId, provider)
   }
 
+  async getState (channelId: string): Promise<number> {
+    return this.channelContract.getState(channelId)
+  }
   /**
    * Save payment into the storage and return an id of the payment. The id can be used by {@link Machinomy.paymentById}.
    */
