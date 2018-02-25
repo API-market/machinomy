@@ -7,7 +7,7 @@ let f = (async () => {
   /**
    * Account that send payments payments.
    */
-  let sender = '0x5bf66080c92b81173f470e25f9a12fc146278429'
+  let sender = '0x775f0721a46a8260ee0dd6558e7c10b18451fdef'
 
   /**
    * Geth must be run on local machine, or use another web3 provider.
@@ -27,10 +27,11 @@ let f = (async () => {
    * Request token to content access
    */
   let result = await machinomy.buy({
-    price: Number(headers['paywall-price']),
-    gateway: headers['paywall-gateway'],
-    receiver: headers['paywall-address'],
-    meta: 'metaidexample'
+    price: 0.1,
+    gateway: "http://localhost:3002/machinomy",
+    receiver: "0x1aea7050c6dca3286a9c02f1e1e3ccdb1e8445f9",
+    meta: 'metaidexample',
+    
   })
 
   let token = result.token

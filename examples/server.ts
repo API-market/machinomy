@@ -34,18 +34,18 @@ let fetch = require('whatwg-fetch').fetch
 /**
  * Account that receives payments.
  */
-let receiver = '0x3155694d7558eec974cfe35eaa3c2c7bcebb793f'
+let receiver = '0x1aea7050c6dca3286a9c02f1e1e3ccdb1e8445f9'
 
 /**
  * Geth must be run on local machine, or use another web3 provider.
  */
-let provider = new Web3.providers.HttpProvider(process.env.MACHINOMY_GETH_ADDR)
+let provider = new Web3.providers.HttpProvider('http://localhost:8545')
 let web3 = new Web3(provider)
 
 /**
  * Create machinomy instance that provides API for accepting payments.
  */
-let machinomy = new Machinomy(receiver, web3, { engine: 'mongo', databaseFile: 'machinomy' })
+let machinomy = new Machinomy(receiver, web3, { engine: 'nedb', databaseFile: 'machinomy' })
 
 let hub = express()
 hub.use(bodyParser.json())
@@ -75,10 +75,11 @@ hub.get('/channels', async (req: express.Request, res: express.Response, next: e
   res.status(200).send(channels.map(PaymentChannelSerde.instance.serialize))
 })
 
-hub.get('/claim/:channelid', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+hub.get('/claim/:channelid/:provider', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
   try {
     let channelId = req.params.channelid
-    await machinomy.close(channelId)
+    let provider = req.params.provider
+    await machinomy.close(channelId, provider)
     res.status(200).send('Claimed')
   } catch (error) {
     res.status(404).send('No channel found')
@@ -86,7 +87,7 @@ hub.get('/claim/:channelid', async (req: express.Request, res: express.Response,
   }
 })
 
-let port = 3001
+let port = 3002
 hub.listen(port, function () {
   console.log('HUB is ready on port ' + port)
 })

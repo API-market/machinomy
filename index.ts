@@ -29,6 +29,7 @@ export interface BuyOptions {
    * The payment signed by web3 inside Machinomy.
    */
   gateway: string,
+  minimumDepositAmount: number | BigNumber.BigNumber
   meta: string,
   contractAddress?: string
 }
@@ -179,8 +180,9 @@ export default class Machinomy {
    */
   async buy (options: BuyOptions): Promise<BuyResult> {
     const price = new BigNumber.BigNumber(options.price)
+    const minimumDepositAmount = new BigNumber.BigNumber(options.minimumDepositAmount)
     const container = env.container()
-    const channel = await this.channelManager.requireOpenChannel(this.account, options.receiver, price)
+    const channel = await this.channelManager.requireOpenChannel(this.account, options.receiver, price, minimumDepositAmount)
     const payment: Payment = await this.channelManager.nextPayment(channel.channelId, price, options.meta)
     const res: AcceptPaymentResponse = await this.client.doPayment(payment, options.gateway)
     const contract = process.env.CONTRACT_ADDRESS ?
@@ -254,6 +256,7 @@ export default class Machinomy {
   async getState (channelId: string): Promise<number> {
     return this.channelContract.getState(channelId)
   }
+
   /**
    * Save payment into the storage and return an id of the payment. The id can be used by {@link Machinomy.paymentById}.
    */

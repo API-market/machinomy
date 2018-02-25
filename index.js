@@ -134,13 +134,14 @@ var Machinomy = /** @class */ (function () {
      */
     Machinomy.prototype.buy = function (options) {
         return __awaiter(this, void 0, void 0, function () {
-            var price, container, channel, payment, res, contract, _a;
+            var price, minimumDepositAmount, container, channel, payment, res, contract, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         price = new BigNumber.BigNumber(options.price);
+                        minimumDepositAmount = new BigNumber.BigNumber(options.minimumDepositAmount);
                         container = env.container();
-                        return [4 /*yield*/, this.channelManager.requireOpenChannel(this.account, options.receiver, price)];
+                        return [4 /*yield*/, this.channelManager.requireOpenChannel(this.account, options.receiver, price, minimumDepositAmount)];
                     case 1:
                         channel = _b.sent();
                         return [4 /*yield*/, this.channelManager.nextPayment(channel.channelId, price, options.meta)];

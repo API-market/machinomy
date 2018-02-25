@@ -154,8 +154,9 @@ export class ChannelManagerImpl extends EventEmitter implements ChannelManager {
     return this.tokensDao.isPresent(token)
   }
 
-  private internalOpenChannel (sender: string, receiver: string, amount: BigNumber.BigNumber, minDepositAmount: BigNumber.BigNumber = new BigNumber.BigNumber(0)): Promise<PaymentChannel> {
-    let depositAmount = amount.times(10)
+  private internalOpenChannel (sender: string, receiver: string, amount: BigNumber.BigNumber, minDepositAmount: BigNumber.BigNumber): Promise<PaymentChannel> {
+
+    let depositAmount = amount.times(5)
 
     if (minDepositAmount.greaterThan(0) && minDepositAmount.greaterThan(depositAmount)) {
       depositAmount = minDepositAmount
