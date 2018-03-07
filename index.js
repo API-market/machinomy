@@ -41,6 +41,7 @@ var client_1 = require("./lib/client");
 var services_1 = require("./lib/services");
 var env = require("./lib/env");
 var contracts_1 = require("@machinomy/contracts");
+var contracts_2 = require("@machinomy/contracts");
 /**
  * Machinomy is a library for micropayments in Ether (and ERC20 tokens) over HTTP.
  * Machinomy provides API to send and receive a minuscule amount of money instantly.
@@ -150,12 +151,12 @@ var Machinomy = /** @class */ (function () {
                         return [4 /*yield*/, this.client.doPayment(payment, options.gateway)];
                     case 3:
                         res = _b.sent();
-                        if (!process.env.CONTRACT_ADDRESS) return [3 /*break*/, 5];
+                        if (!process.env.ERC20CONTRACT_ADDRESS) return [3 /*break*/, 5];
                         return [4 /*yield*/, contracts_1.Unidirectional.contract(this.web3.currentProvider).at(process.env.CONTRACT_ADDRESS)];
                     case 4:
                         _a = _b.sent();
                         return [3 /*break*/, 7];
-                    case 5: return [4 /*yield*/, contracts_1.Unidirectional.contract(this.web3.currentProvider).deployed()];
+                    case 5: return [4 /*yield*/, contracts_2.TokenUnidirectional.contract(this.web3.currentProvider).at(process.env.CONTRACT_ADDRESS)];
                     case 6:
                         _a = _b.sent();
                         _b.label = 7;

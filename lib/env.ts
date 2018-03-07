@@ -1,6 +1,7 @@
 export interface IEnv {
   MACHINOMY_NETWORK?: string
   CONTRACT_ADDRESS?: string
+  ERC20CONTRACT_ADDRESS?: string
 }
 
 /* tslint:disable */

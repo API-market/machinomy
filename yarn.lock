@@ -29,15 +29,15 @@
     web3 "^0.20.1"
     zeppelin-solidity "^1.2.0"
 
-"@machinomy/contracts@^4.0.2":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@machinomy/contracts/-/contracts-4.0.2.tgz#bde910b62828af3f2a4100e4d7476289dfd4373f"
+"@machinomy/contracts@github:API-market/machinomy-contracts":
+  version "4.0.1"
+  resolved "https://codeload.github.com/API-market/machinomy-contracts/tar.gz/560530dba29d975d18f3ebba3757f4c970177e23"
   dependencies:
     bignumber.js "4.1.0"
     buffer "^5.0.7"
     ethereumjs-util "^5.1.3"
-    truffle-contract "^3.0.0"
-    web3 "^0.20.1"
+    truffle-contract "^3.0.4"
+    web3 "^0.20.5"
 
 "@machinomy/types-truffle-contract@https://github.com/machinomy/types-truffle-contract":
   version "0.0.1"
@@ -2108,6 +2108,18 @@ ethereumjs-util@^5.1.2:
     rlp "^2.0.0"
     secp256k1 "^3.0.1"
 
+ethereumjs-util@^5.1.4:
+  version "5.1.5"
+  resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-5.1.5.tgz#2f02575852627d45622426f25ee4a0b5f377f27a"
+  dependencies:
+    bn.js "^4.11.0"
+    create-hash "^1.1.2"
+    ethjs-util "^0.1.3"
+    keccak "^1.0.2"
+    rlp "^2.0.0"
+    safe-buffer "^5.1.1"
+    secp256k1 "^3.0.1"
+
 ethereumjs-vm@^2.0.2:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/ethereumjs-vm/-/ethereumjs-vm-2.3.3.tgz#05719139e0c4a59e829022964a6048b17d2d84b0"
@@ -2211,7 +2223,7 @@ expect@^22.3.0:
     jest-message-util "^22.2.0"
     jest-regex-util "^22.1.0"
 
-express@^4.14.0:
+express@^4.16.2:
   version "4.16.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.16.2.tgz#e35c6dfe2d64b7dca0a5cd4f21781be3299e076c"
   dependencies:
@@ -3731,6 +3743,13 @@ mongodb-core@2.1.18:
     bson "~1.0.4"
     require_optional "~1.0.0"
 
+mongodb-core@2.1.19:
+  version "2.1.19"
+  resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-2.1.19.tgz#00fbd5e5a3573763b9171cfd844e60a8f2a3a18b"
+  dependencies:
+    bson "~1.0.4"
+    require_optional "~1.0.0"
+
 "mongodb-uri@>= 0.9.7":
   version "0.9.7"
   resolved "https://registry.yarnpkg.com/mongodb-uri/-/mongodb-uri-0.9.7.tgz#0f771ad16f483ae65f4287969428e9fbc4aa6181"
@@ -3741,6 +3760,14 @@ mongodb@^2.2.31:
   dependencies:
     es6-promise "3.2.1"
     mongodb-core "2.1.18"
+    readable-stream "2.2.7"
+
+mongodb@^2.2.34:
+  version "2.2.35"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-2.2.35.tgz#cd1b5af8a9463e3f9a787fa5b3d05565579730f9"
+  dependencies:
+    es6-promise "3.2.1"
+    mongodb-core "2.1.19"
     readable-stream "2.2.7"
 
 ms@0.7.2:
@@ -4627,7 +4654,7 @@ request@2.81.0:
     tunnel-agent "^0.6.0"
     uuid "^3.0.0"
 
-request@^2.67.0, request@^2.76.0, request@^2.79.0:
+request@^2.67.0, request@^2.76.0, request@^2.79.0, request@^2.83.0:
   version "2.83.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.83.0.tgz#ca0b65da02ed62935887808e6f510381034e3356"
   dependencies:
@@ -5275,12 +5302,24 @@ truffle-blockchain-utils@^0.0.3:
   dependencies:
     web3 "^0.20.1"
 
+truffle-blockchain-utils@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/truffle-blockchain-utils/-/truffle-blockchain-utils-0.0.4.tgz#e31a346db61775c80ccd6f632de5e72f97f20ea5"
+
 truffle-contract-schema@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/truffle-contract-schema/-/truffle-contract-schema-1.0.1.tgz#08ceaefe71062a8ac9ab881a77a30fda3744176e"
   dependencies:
     ajv "^5.1.1"
     crypto-js "^3.1.9-1"
+
+truffle-contract-schema@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/truffle-contract-schema/-/truffle-contract-schema-2.0.0.tgz#535378c0b6a7f58011ea8d84f57771771cb45163"
+  dependencies:
+    ajv "^5.1.1"
+    crypto-js "^3.1.9-1"
+    debug "^3.1.0"
 
 truffle-contract@^3.0.0:
   version "3.0.3"
@@ -5289,6 +5328,16 @@ truffle-contract@^3.0.0:
     ethjs-abi "0.1.8"
     truffle-blockchain-utils "^0.0.3"
     truffle-contract-schema "^1.0.0"
+    truffle-error "0.0.2"
+    web3 "^0.20.1"
+
+truffle-contract@^3.0.3, truffle-contract@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/truffle-contract/-/truffle-contract-3.0.4.tgz#be169ce00a14d025431e95318e8bae049fca9cfc"
+  dependencies:
+    ethjs-abi "0.1.8"
+    truffle-blockchain-utils "^0.0.4"
+    truffle-contract-schema "^2.0.0"
     truffle-error "0.0.2"
     web3 "^0.20.1"
 
@@ -5621,6 +5670,16 @@ web3-typescript-typings@^0.9.7:
 web3@^0.20.1, web3@^0.20.2:
   version "0.20.2"
   resolved "https://registry.yarnpkg.com/web3/-/web3-0.20.2.tgz#c54dac5fc0e377399c04c1a6ecbb12e4513278d6"
+  dependencies:
+    bignumber.js "git+https://github.com/frozeman/bignumber.js-nolookahead.git"
+    crypto-js "^3.1.4"
+    utf8 "^2.1.1"
+    xhr2 "*"
+    xmlhttprequest "*"
+
+web3@^0.20.5:
+  version "0.20.5"
+  resolved "https://registry.yarnpkg.com/web3/-/web3-0.20.5.tgz#c5048d35f7bf4e2c4c280ce51fbbbc951290b165"
   dependencies:
     bignumber.js "git+https://github.com/frozeman/bignumber.js-nolookahead.git"
     crypto-js "^3.1.4"

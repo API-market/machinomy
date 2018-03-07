@@ -17,7 +17,8 @@ import defaultRegistry from './lib/services'
 import ChannelContract from './lib/channel_contract'
 import * as env from './lib/env'
 import { Unidirectional } from '@machinomy/contracts'
-/**
+import { TokenUnidirectional } from '@machinomy/contracts'
+/*
  * Options for machinomy buy.
  */
 export interface BuyOptions {
@@ -30,8 +31,7 @@ export interface BuyOptions {
    */
   gateway: string,
   minimumDepositAmount: number | BigNumber.BigNumber
-  meta: string,
-  contractAddress?: string
+  meta: string
 }
 
 /**
@@ -185,9 +185,9 @@ export default class Machinomy {
     const channel = await this.channelManager.requireOpenChannel(this.account, options.receiver, price, minimumDepositAmount)
     const payment: Payment = await this.channelManager.nextPayment(channel.channelId, price, options.meta)
     const res: AcceptPaymentResponse = await this.client.doPayment(payment, options.gateway)
-    const contract = process.env.CONTRACT_ADDRESS ?
+    const contract = process.env.ERC20CONTRACT_ADDRESS ?
         await Unidirectional.contract(this.web3.currentProvider).at(process.env.CONTRACT_ADDRESS as string) :
-        await Unidirectional.contract(this.web3.currentProvider).deployed()
+        await TokenUnidirectional.contract(this.web3.currentProvider).at(process.env.CONTRACT_ADDRESS as string)
     return { token: res.token, channelId: channel.channelId, receiver: channel.receiver, sender: channel.sender, value: channel.value.toString(), contract: contract.address}
   }
 

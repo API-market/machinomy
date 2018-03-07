@@ -7,7 +7,7 @@ let f = (async () => {
   /**
    * Account that send payments payments.
    */
-  let sender = '0x775f0721a46a8260ee0dd6558e7c10b18451fdef'
+  let sender = '0xbb1891ca1f43bdcec4f2d47d68c9c27023ac3ffd'
 
   /**
    * Geth must be run on local machine, or use another web3 provider.
@@ -28,9 +28,10 @@ let f = (async () => {
    */
   let result = await machinomy.buy({
     price: 0.1,
+    minimumDepositAmount: 1000,
     gateway: "http://localhost:3002/machinomy",
-    receiver: "0x1aea7050c6dca3286a9c02f1e1e3ccdb1e8445f9",
-    meta: 'metaidexample',
+    receiver: "0x27efff7cfe5e744852e71209884ceb1b699f5e36",
+    meta: 'metaidexample'
     
   })
 

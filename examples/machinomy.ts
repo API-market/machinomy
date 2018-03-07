@@ -5,17 +5,20 @@ import * as express from 'express'
 import * as bodyParser from 'body-parser'
 const fs = require('fs')
 
-let sender = '0x0108d76118d97b88aa40167064cb242fa391effa'
-let receiver = '0x3155694d7558eec974cfe35eaa3c2c7bcebb793f'
+let sender = '0x4bdcca2d324ebf8c7fbd3d092a9f001f40936981'
+let receiver = '0x36403b09306302562e6f7679f77bf08f7cb29e20'
 
+process.env.CONTRACT_ADDRESS = "0x15d06f6eaaa32300053e477f919c76f9f5da82ba"
 let getBalance = async (web3: Web3, account: string) => {
   return web3.eth.getBalance(account)
 }
 
 let provider = configuration.currentProvider()
 let web3 = new Web3(provider)
+// const provider = new Web3.providers.HttpProvider('http://localhost:8545')
+// const web3 = new Web3(provider)
 
-let machinomyHub = new Machinomy(receiver, web3, { engine: 'nedb', databaseFile: 'hub' })
+let machinomyHub = new Machinomy(receiver, web3, { engine: 'nedb', databaseFile: 'serverDB' })
 let hub = express()
 hub.use(bodyParser.json())
 hub.use(bodyParser.urlencoded({ extended: false }))
@@ -39,9 +42,9 @@ let checkBalance = async (message: string, web3: Web3, sender: string, cb: Funct
 
 let port = 3001
 let server = hub.listen(port, async () => {
-  const price = 1000000
+  const price = 100
 
-  let machinomy = new Machinomy(sender, web3, { engine: 'nedb', settlementPeriod: 0, databaseFile: 'client' })
+  let machinomy = new Machinomy(sender, web3, { engine: 'nedb', settlementPeriod: 0, databaseFile: 'clientDB' })
 
   let message = 'This is first buy:'
   let resultFirst = await checkBalance(message, web3, sender, async () => {
@@ -49,7 +52,8 @@ let server = hub.listen(port, async () => {
       receiver: receiver,
       price: price,
       gateway: 'http://localhost:3001/machinomy',
-      meta: 'metaexample'
+      meta: 'metaexample',
+      minimumDepositAmount: 10000
     }).catch((e: Error) => {
       console.log(e)
     })
@@ -61,7 +65,8 @@ let server = hub.listen(port, async () => {
       receiver: receiver,
       price: price,
       gateway: 'http://localhost:3001/machinomy',
-      meta: 'metaexample'
+      meta: 'metaexample',
+      minimumDepositAmount: 10000
     }).catch((e: Error) => {
       console.log(e)
     })
@@ -89,15 +94,16 @@ let server = hub.listen(port, async () => {
       receiver: receiver,
       price: price,
       gateway: 'http://localhost:3001/machinomy',
-      meta: 'metaexample'
+      meta: 'metaexample',
+      minimumDepositAmount: 10000
     }).catch((e: Error) => {
       console.log(e)
     })
   })
 
-  message = 'Claim by reciver'
+  message = 'Claim by reciever'
   await checkBalance(message, web3, sender, async () => {
-    await machinomyHub.close(resultThird.channelId)
+    await machinomyHub.close(resultThird.channelId,"0xc2a3498f52c9f8f6efd210f4153bdc71685c0e52")
   })
 
   console.log('ChannelId after first buy:', resultFirst.channelId)
@@ -105,6 +111,6 @@ let server = hub.listen(port, async () => {
   console.log('ChannelId after once more buy:', resultThird.channelId)
 
   server.close()
-  try { fs.unlinkSync('client') } catch (error) { console.log(error) }
-  try { fs.unlinkSync('hub') } catch (error) { console.log(error) }
+  try { fs.unlinkSync('clientDB') } catch (error) { console.log(error) }
+  try { fs.unlinkSync('serverDB') } catch (error) { console.log(error) }
 })

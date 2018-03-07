@@ -156,6 +156,7 @@ export class ChannelManagerImpl extends EventEmitter implements ChannelManager {
 
   private internalOpenChannel (sender: string, receiver: string, amount: BigNumber.BigNumber, minDepositAmount: BigNumber.BigNumber): Promise<PaymentChannel> {
 
+    //specify the minimum deposit amount required to open the payment channel
     let depositAmount = amount.times(5)
 
     if (minDepositAmount.greaterThan(0) && minDepositAmount.greaterThan(depositAmount)) {

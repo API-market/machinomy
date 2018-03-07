@@ -22,7 +22,6 @@ const CONTRACTS = {
 
 export const contractAddress = (): string => {
   const container = env.container()
-  const network = container.MACHINOMY_NETWORK || 'ropsten'
   const address = container.CONTRACT_ADDRESS
   if (address) {
     return address
