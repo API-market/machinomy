@@ -44,7 +44,7 @@
     "index.js.map"
   ],
   "dependencies": {
-    "@machinomy/contracts": "github:API-market/machinomy-contracts",
+    "@machinomy/contracts": "https://github.com/api-market/machinomy-contracts#master",
     "@types/bignumber.js": "^4.0.2",
     "@types/uuid": "^3.4.3",
     "bignumber.js": "^4.1.0",
