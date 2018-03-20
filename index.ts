@@ -53,9 +53,7 @@ export interface BuyResult {
  */
 export interface MachinomyOptions {
   /** "nedb" or "mongo". */
-  engine?: string | Engine
-  /** Path to nedb database file. In the browser will used as name for indexedb. */
-  databaseFile?: string
+  databaseUrl: string
   minimumChannelAmount?: number | BigNumber.BigNumber
   settlementPeriod?: number
 }

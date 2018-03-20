@@ -1,8 +1,33 @@
-const MongoClient = require('mongodb').MongoClient
-const PGClient = require('pg').Client
+// const MongoClient = require('mongodb').MongoClient
+// const PGClient = require('pg').Client
+
+// import Datastore = require('nedb')
+// import pify from '../util/pify'
+let MongoClient: any
+
+try {
+  MongoClient = require('mongodb').MongoClient
+} catch (e) {
+  MongoClient = {}
+}
+
+let PGClient: any
+
+try {
+  PGClient = require('pg').Client
+} catch (e) {
+  PGClient = {}
+}
 
 import Datastore = require('nedb')
-import pify from '../util/pify'
+
+let DS: any
+
+try {
+  DS = require('nedb')
+} catch (e) {
+  DS = {}
+}
 
 export default interface Engine {
   connect (): Promise<any>
@@ -13,9 +38,15 @@ export default interface Engine {
 }
 
 export class EngineMongo implements Engine {
-  connectionInProgress: Promise<any>
+  private url: string
 
-  _client: any
+  private connectionInProgress?: Promise<any>
+
+  private _client: any
+
+  constructor (url: string) {
+    this.url = url
+  }
 
   connect (): Promise<any> {
     if (this.connectionInProgress) {
@@ -23,7 +54,7 @@ export class EngineMongo implements Engine {
     }
 
     this.connectionInProgress = new Promise((resolve, reject) => {
-      MongoClient.connect('mongodb://localhost:27017/machinomy', (err: any, db: any) => {
+      MongoClient.connect(this.url, (err: any, db: any) => {
         if (err) {
           return reject(err)
         }
@@ -83,10 +114,11 @@ export class EngineNedb implements Engine {
   datastore: Datastore
 
   constructor (path: string, inMemoryOnly: boolean = false) {
+    console.log(path)
     if (db[path]) {
       this.datastore = db[path]
     } else {
-      db[path] = new Datastore({ filename: path, autoload: true, inMemoryOnly: inMemoryOnly })
+      db[path] = new DS({ filename: path, autoload: true, inMemoryOnly: inMemoryOnly })
       this.datastore = db[path]
     }
   }
@@ -114,22 +146,30 @@ export class EngineNedb implements Engine {
 }
 
 export class EnginePostgres implements Engine {
-  connectionInProgress: Promise<any>
+  private url?: string
 
-  _client: any
+  private connectionInProgress?: Promise<any>
+
+  private _client: any
+
+  constructor (url?: string) {
+    this.url = url
+  }
 
   connect (): Promise<any> {
     if (this.connectionInProgress) {
       return this.connectionInProgress
     }
 
-    const client = new PGClient()
+    const client = new PGClient(this.url ? {
+      connectionString: this.url
+    } : undefined)
 
     this.connectionInProgress = client.connect().then(() => {
       this._client = client
     })
 
-    return this.connectionInProgress
+    return this.connectionInProgress!
   }
 
   isConnected (): boolean {
@@ -168,3 +208,4 @@ export class EnginePostgres implements Engine {
     return this.connect()
   }
 }
+

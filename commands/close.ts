@@ -6,7 +6,7 @@ import Web3 = require('web3')
 let provider = configuration.currentProvider()
 let web3 = new Web3(provider)
 
-function close (channelId: string, options: CommandPrompt): void {
+function close (channelId: string, provider: string, options: CommandPrompt): void {
   let namespace = options.namespace || 'sender'
   let settings = configuration.sender()
   if (namespace === 'receiver') {
@@ -25,8 +25,8 @@ function close (channelId: string, options: CommandPrompt): void {
   if (settings.account) {
     let account = settings.account
 
-    let machinomy = new Machinomy(account, web3, { engine: settings.engine })
-    machinomy.close(channelId).then(() => {
+    let machinomy = new Machinomy(account, web3, { databaseUrl: settings.databaseUrl })
+    machinomy.close(channelId, provider).then(() => {
       console.log('closed')
     }).catch((e: Error) => {
       console.log(e)

@@ -45,7 +45,7 @@ let web3 = new Web3(provider)
 /**
  * Create machinomy instance that provides API for accepting payments.
  */
-let machinomy = new Machinomy(receiver, web3, { engine: 'nedb', databaseFile: 'machinomy' })
+let machinomy = new Machinomy(receiver, web3, { databaseUrl: 'nedb://./hub' })
 
 let hub = express()
 hub.use(bodyParser.json())
