@@ -7,15 +7,16 @@ import * as bodyParser from 'body-parser'
 import { buildCPUContract } from '@machinomy/contracts'
 
 const fs = require('fs')
-let sender = '0x4bdcca2d324ebf8c7fbd3d092a9f001f40936981'
-let receiver = '0x36403b09306302562e6f7679f77bf08f7cb29e20'
+let sender = '0x3f3f4872514d37b00b647225b045da5ea9d6ab43'
+let receiver = '0xa705d045d8afde3514552297315c7d03b9fe8ddb'
 
-process.env.CONTRACT_ADDRESS = "0x94f400e37f8fc86b9e8ff3e4e2b247592fbf890f"
-process.env.ERC20CONTRACT_ADDRESS = "0x208a1e26192fa348ec39c2e96f22e64af7392d79"
+process.env.CONTRACT_ADDRESS = "0x9c4878be04d1295ea266181469ce94a983bbf975"
+process.env.ERC20CONTRACT_ADDRESS = "0xb8972592dc94e4127ce821dd6e7b104adde78ad4"
 const provider = new Web3.providers.HttpProvider('http://localhost:8545')
 const web3 = new Web3(provider)
 
-let machinomyHub = new Machinomy(receiver, web3, {engine: 'nedb', databaseFile: 'serverDB'})
+let machinomyHub = new Machinomy(receiver, web3, { databaseUrl: 'mongodb://localhost:27017/machinomy' })
+
 let hub = express()
 hub.use(bodyParser.json())
 hub.use(bodyParser.urlencoded({ extended: false }))
@@ -32,7 +33,7 @@ let f = async () => {
   /////// ERC20
   console.log('================================')
   console.log('ERC20')
-  let machinomy = new Machinomy(sender, web3, {engine: 'nedb', databaseFile:'clientDB'})
+  let machinomy = new Machinomy(sender, web3, { databaseUrl: 'nedb://./client' })
   let checkBalanceERC20 = async (message: string, web3: Web3, sender: string, cb: Function) => {
     let instanceERC20 = await buildCPUContract(process.env.ERC20CONTRACT_ADDRESS as string, web3)
     let deployedERC20 = await instanceERC20.deployed()
@@ -96,7 +97,7 @@ let f = async () => {
   message = 'Claim by reciever'
   await checkBalanceERC20(message, web3, sender, async () => {
     // let machinomy2 = new Machinomy(receiver, web3, { engine: 'mongo' })
-    await machinomyHub.close(resultThirdERC20.channelId, "0xc2a3498f52c9f8f6efd210f4153bdc71685c0e52")
+    await machinomyHub.close(resultThirdERC20.channelId, "0x0ed1bb8d445e16973f8bc88cd5fd5b9034ca0429")
   })
 }
 
